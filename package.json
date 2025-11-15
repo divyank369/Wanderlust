@@ -1,11 +1,11 @@
 {
   "engines": {
-    "node": "22.18.0"
+    "node": "18.x"
   },
-  "name": "major-project",
+  "name": "wanderlust",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
