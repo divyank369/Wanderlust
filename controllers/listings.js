@@ -1,39 +1,37 @@
 const Listing = require("../models/listing");
-const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args)); // ✅ For API call
+const cloudinary = require("../cloudConfig");
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
-const mapToken = process.env.MAP_TOKEN; // From .env file
+const mapToken = process.env.MAP_TOKEN;
 
-// 🌍 Helper function - MapTiler Forward Geocoding
+// MAPTILER FORWARD GEOCODING
 async function getCoordinates(location) {
     const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(location)}.json?key=${mapToken}`;
     const response = await fetch(url);
     const data = await response.json();
 
     if (data.features && data.features.length > 0) {
-        return data.features[0].geometry; // { type: 'Point', coordinates: [lng, lat] }
-    } else {
-        throw new Error("No geocoding results found");
-    }
+        return data.features[0].geometry;
+    } 
+    throw new Error("No geocoding results found");
 }
 
-// ----------------------------
-// Index Route
-// ----------------------------
+
+
+// INDEX
 module.exports.index = async (req, res) => {
     const allListings = await Listing.find({});
     res.render("listings/index.ejs", { allListings });
 };
 
-// ----------------------------
-// New Form Route
-// ----------------------------
+
+// NEW FORM
 module.exports.renderNewForm = (req, res) => {
     res.render("listings/new.ejs");
 };
 
-// ----------------------------
-// Show Route
-// ----------------------------
+
+// SHOW ROUTE
 module.exports.showListing = async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id)
@@ -48,44 +46,52 @@ module.exports.showListing = async (req, res) => {
     res.render("listings/show.ejs", { listing });
 };
 
-// ----------------------------
-// ✅ Create Route (with MapTiler Geocoding)
-// ----------------------------
+
+// CREATE ROUTE (FINAL FIXED VERSION)
 module.exports.createListing = async (req, res) => {
     try {
-        // Get location from form input
         const location = req.body.listing.location;
-
-        // Forward Geocode to get coordinates
         const geoData = await getCoordinates(location);
-        console.log("📍 GeoData:", geoData);
 
-        // Image handling
-        let url = req.file.path;
-        let filename = req.file.filename;
+        let imageURL = null;
+        let publicID = null;
 
-        // Create new listing
+        // CLOUDINARY UPLOAD
+        if (req.file) {
+            const uploadResponse = await cloudinary.uploader.upload(req.file.path, {
+                folder: "wanderlust_DEV"
+            });
+
+            imageURL = uploadResponse.secure_url;
+            publicID = uploadResponse.public_id;
+        }
+
         const newListing = new Listing(req.body.listing);
         newListing.owner = req.user._id;
-        newListing.image = { url, filename };
 
-        // ✅ Add geometry from MapTiler geocoding
+        // image
+        newListing.image = {
+            url: imageURL,
+            filename: publicID
+        };
+
+        // map geometry
         newListing.geometry = geoData;
 
-        let savedListing = await newListing.save();
-        console.log("✅ New Listing Created:", savedListing);
+        await newListing.save();
+
         req.flash("success", "New Listing Created Successfully!");
-        res.redirect(`/listings/${savedListing._id}`);
+        res.redirect(`/listings/${newListing._id}`);
+
     } catch (err) {
-        console.error("❌ Geocoding Error:", err);
-        req.flash("error", "Error creating listing. Please try again.");
+        console.error("❌ Create Error:", err);
+        req.flash("error", "Error creating listing");
         res.redirect("/listings/new");
     }
 };
 
-// ----------------------------
-// Edit Route
-// ----------------------------
+
+// EDIT
 module.exports.editListing = async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
@@ -93,53 +99,51 @@ module.exports.editListing = async (req, res) => {
         req.flash("error", "Listing not found");
         return res.redirect("/listings");
     }
-    let originalImageUrl = listing.image.url;
-    originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_250");
+
+    let originalImageUrl = listing.image.url?.replace("/upload", "/upload/w_250");
+
     res.render("listings/edit.ejs", { listing, originalImageUrl });
 };
 
-// ----------------------------
-// Update Route
-// ----------------------------
+
+// UPDATE (FINAL FIXED VERSION)
 module.exports.updateListing = async (req, res) => {
     let { id } = req.params;
 
-    // STEP 1: Update listing basic fields
     let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
 
-    // STEP 2: If location was edited → regenerate new coordinates
+    // Map update
     if (req.body.listing.location) {
         try {
             const newGeoData = await getCoordinates(req.body.listing.location);
-            listing.geometry = newGeoData; // update coordinates
+            listing.geometry = newGeoData;
         } catch (err) {
-            console.error("❌ Update Geocoding Error:", err);
-            req.flash("error", "Unable to update map coordinates.");
+            console.error("❌ Geocoding Error:", err);
         }
     }
 
-    // STEP 3: If new image uploaded → update image
+    // Image update
     if (req.file) {
-        let url = req.file.path;
-        let filename = req.file.filename;
-        listing.image = { url, filename };
+        const uploadResponse = await cloudinary.uploader.upload(req.file.path, {
+            folder: "wanderlust_DEV"
+        });
+
+        listing.image = {
+            url: uploadResponse.secure_url,
+            filename: uploadResponse.public_id
+        };
     }
 
-    // STEP 4: Save final listing
     await listing.save();
-
     req.flash("success", "Listing Updated!");
     res.redirect(`/listings/${id}`);
 };
 
 
-// ----------------------------
-// Delete Route
-// ----------------------------
+// DELETE
 module.exports.destroyListing = async (req, res) => {
     let { id } = req.params;
-    let deletedListing = await Listing.findByIdAndDelete(id);
-    if (!deletedListing) throw new ExpressError("Listing not found", 404);
-    console.log(deletedListing);
+    await Listing.findByIdAndDelete(id);
+    req.flash("success", "Listing deleted");
     res.redirect("/listings");
 };

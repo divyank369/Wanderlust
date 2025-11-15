@@ -15,4 +15,4 @@ const storage = new CloudinaryStorage({
   },
 });
 
-module.exports = { cloudinary, storage };
+module.exports = cloudinary ;
