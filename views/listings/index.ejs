@@ -1,8 +1,5 @@
 <% layout('/layouts/boilerplate') %>
-  <!-- <h3>All Listings</h3> -->
-  <!-- FILTERS SECTION START -->
 <style>
-  /* HEADER */
   .filters-header {
     display: flex;
     align-items: center;
@@ -10,12 +7,10 @@
     padding: 0 12px;
     margin-bottom: 0.5rem;
   }
-
   .filters-title {
     font-weight: 600;
     font-size: 1.05rem;
   }
-
   .filters-seeall {
     background: none;
     border: none;
@@ -25,7 +20,6 @@
     color: #007AFF;
   }
 
-  /* FILTER BAR */
   .filters-bar {
     display: flex;
     gap: 1rem;
@@ -37,130 +31,69 @@
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
   }
-
-  .filters-bar::-webkit-scrollbar {
-    display: none;
-  }
+  .filters-bar::-webkit-scrollbar { display: none; }
 
   .filter {
     flex: 0 0 auto;
     min-width: 64px;
     text-align: center;
-    scroll-snap-align: start;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
+    scroll-snap-align: start;
   }
-
   .filter p {
     font-size: 0.8rem;
     margin-top: 3px;
   }
 
-  /* Initially show only first 5 filters */
   .filters-bar:not(.expanded) .filter:nth-child(n+6) {
     display: none;
   }
 
-  /* Expanded mode */
   .filters-bar.expanded .filter {
     display: inline-flex !important;
   }
 
-  /* Slide animation */
-  .filters-bar.opening {
-    animation: slideIn 220ms ease-out;
-  }
-
+  .filters-bar.opening { animation: slideIn 200ms ease-out; }
   @keyframes slideIn {
     from { transform: translateX(-10px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    to   { transform: translateX(0); opacity: 1; }
   }
 
-  /* Desktop view */
   @media (min-width: 577px) {
-    .filters-header {
-      display: none;
-    }
+    .filters-header { display: none; }
     .filters-bar {
       overflow: visible;
       flex-wrap: wrap;
     }
     .filters-bar .filter {
-      display: flex !important;
       min-width: auto !important;
+      display: flex !important;
     }
   }
 
-  /* Hide tax text on mobile */
   @media (max-width: 480px) {
-    .tax-toggle .form-check-label {
-      display: none;
-    }
+    .tax-toggle .form-check-label { display: none; }
   }
 </style>
-
-
-<!-- FILTER HEADER (Mobile) -->
 <div class="filters-header">
   <div class="filters-title">Iconic Cities</div>
   <button id="filters-seeall-btn" class="filters-seeall">See all</button>
 </div>
-
-<!-- FILTERS BAR -->
 <div id="filters" class="filters-bar">
 
-  <div class="filter">
-    <i class="fa-solid fa-fire"></i>
-    <p>Trending</p>
-  </div>
+  <div class="filter"><i class="fa-solid fa-fire"></i><p>Trending</p></div>
+  <div class="filter"><i class="fa-solid fa-bed"></i><p>Rooms</p></div>
+  <div class="filter"><i class="fa-solid fa-location-dot"></i><p>Nearby</p></div>
+  <div class="filter"><i class="fa-solid fa-mountain-city"></i><p>Iconic Cities</p></div>
+  <div class="filter"><i class="fa-solid fa-mountain-sun"></i><p>Mountains</p></div>
+  <div class="filter"><i class="fa-solid fa-person-swimming"></i><p>Amazing Pools</p></div>
+  <div class="filter"><i class="fa-solid fa-place-of-worship"></i><p>Castles</p></div>
+  <div class="filter"><i class="fa-solid fa-campground"></i><p>Camping</p></div>
+  <div class="filter"><i class="fa-solid fa-cow"></i><p>Farms</p></div>
+  <div class="filter"><i class="fa-solid fa-snowflake"></i><p>Arctic</p></div>
 
-  <div class="filter">
-    <i class="fa-solid fa-bed"></i>
-    <p>Rooms</p>
-  </div>
-
-  <div class="filter">
-    <i class="fa-solid fa-location-dot"></i>
-    <p>Nearby</p>
-  </div>
-
-  <div class="filter">
-    <i class="fa-solid fa-mountain-city"></i>
-    <p>Iconic Cities</p>
-  </div>
-
-  <div class="filter">
-    <i class="fa-solid fa-mountain-sun"></i>
-    <p>Mountains</p>
-  </div>
-
-  <div class="filter">
-    <i class="fa-solid fa-person-swimming"></i>
-    <p>Amazing Pools</p>
-  </div>
-
-  <div class="filter">
-    <i class="fa-solid fa-place-of-worship"></i>
-    <p>Castles</p>
-  </div>
-
-  <div class="filter">
-    <i class="fa-solid fa-campground"></i>
-    <p>Camping</p>
-  </div>
-
-  <div class="filter">
-    <i class="fa-solid fa-cow"></i>
-    <p>Farms</p>
-  </div>
-
-  <div class="filter">
-    <i class="fa-solid fa-snowflake"></i>
-    <p>Arctic</p>
-  </div>
-
-  <!-- TAX TOGGLE -->
   <div class="tax-toggle" style="margin-left:auto;">
     <div class="form-check-reverse form-switch">
       <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
@@ -169,7 +102,6 @@
   </div>
 
 </div>
-
 <script>
   (function () {
     const btn = document.getElementById('filters-seeall-btn');
@@ -183,8 +115,8 @@
       if (expanded) {
         btn.textContent = 'Close';
         filters.classList.add('opening');
-        setTimeout(() => filters.classList.remove('opening'), 250);
-        setTimeout(() => { filters.scrollLeft = 0; }, 80);
+        setTimeout(() => filters.classList.remove('opening'), 220);
+        setTimeout(() => { filters.scrollLeft = 0; }, 60);
       } else {
         btn.textContent = 'See all';
         filters.scrollLeft = 0;
@@ -208,44 +140,39 @@
     });
 
     window.addEventListener('resize', updateVisibility);
-
     updateVisibility();
   })();
 </script>
-<!-- FILTERS SECTION END -->
 
-  <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1 mt-3">
-    <% for(let listing of allListings) { %>
-      <a href="/listings/<%= listing.id %>" class="listing-link">
-        <div class="card col listing-card">
-          <img src="<%= listing.image.url %>" class="card-img-top" alt="listing image" style="height:20rem">
-          <div class="card-img-overlay"></div>
-          <div class="card-body">
-            <p class="card-text">
-              <b>
-                <%= listing.title %>
-              </b><br>
-              <%= listing.description %> <br>
-                &#8377;<%= listing.price.toLocaleString("en-IN") %> / Night
-                <i class="tax-info">&nbsp;+18% GST</i>
-                  <p>Location: <%= listing.location %>, <%= listing.country %>
-                  </p>
-          </div>
+<% if (typeof q !== 'undefined' && q && q.trim().length > 0) { %>
+  <div class="mb-3"><strong>Search results for "<%= q %>"</strong></div>
+<% } %>
+
+<div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1 mt-3">
+  <% for(let listing of allListings) { %>
+    <a href="/listings/<%= listing.id %>" class="listing-link">
+      <div class="card col listing-card">
+        <img src="<%= listing.image.url %>" class="card-img-top" alt="listing image" style="height:20rem">
+        <div class="card-img-overlay"></div>
+        <div class="card-body">
+          <p class="card-text">
+            <b><%= listing.title %></b><br>
+            <%= listing.description %> <br>
+            ₹ <%= listing.price.toLocaleString("en-IN") %> / Night
+            <i class="tax-info">&nbsp;+18% GST</i>
+          </p>
+          <p>Location: <%= listing.location %>, <%= listing.country %></p>
         </div>
-      </a>
-      <% } %>
-  </div>
-  <script>
-    let taxSwitch = document.getElementById('switchCheckDefault');
-    taxSwitch.addEventListener('click', function () {
-      let taxInfo = document.getElementsByClassName('tax-info');
-      for(info of taxInfo){
-        if(taxSwitch.checked){
-          info.style.display = 'inline';
-        } else {
-          info.style.display = 'none';
-        }
-      }
-    });
-      
-  </script>
+      </div>
+    </a>
+  <% } %>
+</div>
+<script>
+  let taxSwitch = document.getElementById('switchCheckDefault');
+  taxSwitch.addEventListener('click', function () {
+    let taxInfo = document.getElementsByClassName('tax-info');
+    for (info of taxInfo) {
+      info.style.display = taxSwitch.checked ? 'inline' : 'none';
+    }
+  });
+</script>
