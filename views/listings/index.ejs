@@ -6,38 +6,15 @@
       flex-wrap: wrap;
       
     }
-
-    .filter {
-      text-align: center;
-      margin-right: 2rem;
-      opacity: 0.7;
-    }
-
-    .filter:hover {
-      opacity: 1;
-      cursor: pointer;
-    }
-
-    .filter p {
-      margin-top: 0.3rem;
-      font-size: 0.8rem;
-    }
-    .tax-info{
-      display: none;
-    }
-    .tax-toggle{
-      border: 1px solid lightgray;
-      border-radius: 1rem;
-      padding: 1rem;
-      margin-left: 3rem;
-      display: flex;
-      align-items: center;
-      height: 2rem;
-      
-    
-    }
   </style>
-  <div id="filters">
+
+  <!-- Filters header (mobile) + horizontal filters bar -->
+  <div class="filters-header">
+    <div class="filters-title">Iconic Cities</div>
+    <button id="filters-seeall-btn" class="filters-seeall">See all</button>
+  </div>
+
+  <div id="filters" class="filters-bar">
     <div class="filter">
       <div> <i class="fa-solid fa-fire"></i></div>
       <p>Trending</p>
@@ -94,19 +71,30 @@
     </div>
   </div>
 
-  <!-- Show only first 4 filters on small screens; `See all` expands inline and scrolls from right to left -->
-  <button id="filters-seeall-btn" class="btn btn-sm" style="display:none; margin-top:.5rem;">See all</button>
-
   <style>
-    @media (max-width: 576px) {
-      #filters { gap: .5rem; overflow-x: hidden; align-items: center; }
-      #filters .filter { flex: 0 0 auto; }
-      /* hide filters after the 4th by default on small screens */
-      #filters .filter:nth-child(n+5) { display: none; }
-      #filters.expanded { overflow-x: auto; scroll-behavior: smooth; }
-      /* when expanded, show all filters inline horizontally */
-      #filters.expanded .filter { display: inline-flex; }
-      #filters-seeall-btn { display: inline-block; }
+    /* Mobile-first filters layout */
+    .filters-header { display:flex; align-items:center; gap:.5rem; margin-bottom:.5rem; }
+    .filters-title { font-weight:600; }
+    .filters-seeall { background:none; border:1px solid #ddd; padding:.25rem .5rem; border-radius:.25rem; }
+    .filters-bar { display:flex; gap:1rem; overflow-x:hidden; -webkit-overflow-scrolling:touch; flex-wrap:nowrap; align-items:center; }
+    .filters-bar .filter { flex:0 0 auto; min-width:64px; display:inline-flex; flex-direction:column; align-items:center; }
+    .filters-bar .filter p { font-size:.8rem; margin-top:.35rem; }
+    .filters-bar .filter:nth-child(n+5) { display:none; }
+    .filters-bar.expanded { overflow-x:auto; scroll-behavior:smooth; }
+    .filters-bar.expanded .filter { display:inline-flex; }
+    .filters-bar.opening { animation: slideIn 260ms ease; }
+    @keyframes slideIn { from { transform: translateX(-12px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+
+    /* Hide mobile header on larger screens and show filters normally */
+    @media (min-width: 577px) {
+      .filters-header { display:none; }
+      .filters-bar { overflow: visible; flex-wrap:wrap; }
+      .filters-bar .filter { display:flex; min-width:auto; }
+    }
+
+    /* Hide long tax label on very small screens */
+    @media (max-width:480px) {
+      .tax-toggle .form-check-label { display:none; }
     }
   </style>
 
@@ -120,15 +108,15 @@
         const expanded = filters.classList.toggle('expanded');
         if(expanded){
           btn.textContent = 'Close';
-          // scroll to the right end so content appears to come from the right
-          setTimeout(()=>{ filters.scrollLeft = filters.scrollWidth; }, 50);
+          filters.classList.add('opening');
+          setTimeout(()=>{ filters.classList.remove('opening'); }, 300);
+          setTimeout(()=>{ filters.scrollLeft = 0; }, 50);
         } else {
           btn.textContent = 'See all';
           filters.scrollLeft = 0;
         }
       }
 
-      // attach only on small screens
       function updateButtonVisibility(){
         if(window.innerWidth <= 576){ btn.style.display = 'inline-block'; }
         else { btn.style.display = 'none'; filters.classList.remove('expanded'); filters.scrollLeft = 0; btn.textContent = 'See all'; }
