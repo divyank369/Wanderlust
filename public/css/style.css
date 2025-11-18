@@ -1,8 +1,14 @@
 body {
   font-family: "Plus Jakarta Sans",sans-serif !important;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+                display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+}
+
+/* Use border-box everywhere to avoid unexpected overflow on small screens */
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
 .container {
@@ -15,6 +21,7 @@ body {
     margin-bottom: 2rem;
     padding: 0.5rem 1rem;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
 }
@@ -56,13 +63,14 @@ body {
 }
 
 .f-info {
-    height: 8rem;
     display: flex;
     background-color: #ebebeb;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: space-evenly;
+    justify-content: space-evenly;
+    align-items: center;
     text-align: center;
+    padding: 1rem 0;
+    min-height: 4rem;
 }
 /* Card */
 .listing-card{
@@ -73,7 +81,8 @@ body {
     border-radius: 1rem !important;
     width: 100% !important;
     object-fit: cover !important;
-
+    height: auto;
+    max-height: 360px;
 }
 .card-body{
     padding: 0 !important;
@@ -120,5 +129,56 @@ body {
 /* MAp */
 #map {
     height: 400px;
-    width: 80vh;
+    width: 100%;
+    /* constrain by viewport width, not viewport height */
+    max-width: 90vw;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .navbar {
+        height: auto;
+        padding: 0.5rem;
+    }
+    .nav-link {
+        font-size: 1rem;
+        margin-right: 0.75rem;
+    }
+    .f-info {
+        padding: 0.75rem 0;
+    }
+    #map {
+        height: 300px;
+    }
+    .show-img {
+        height: 25vh;
+    }
+    .card-img-top {
+        height: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .nav-link {
+        font-size: 0.95rem;
+        margin-right: 0.5rem;
+    }
+    .fa-compass {
+        font-size: 1.5rem;
+    }
+    .card-img-top {
+        height: 140px;
+    }
+    #map {
+        height: 200px;
+    }
+    .show-img {
+        height: 20vh;
+    }
+    /* prevent accidental horizontal scroll on very small devices */
+    body {
+      overflow-x: hidden;
+    }
 }
