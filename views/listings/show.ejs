@@ -3,7 +3,7 @@
 <!-- Pass variables required by map.js -->
 <script>
   const mapToken = "<%= process.env.MAP_TOKEN %>";
-  const coordinates = <%- JSON.stringify(listing.geometry.coordinates) %>;
+  const coordinates = JSON.parse('<%- JSON.stringify((listing.geometry && listing.geometry.coordinates) ? listing.geometry.coordinates : [0, 0]) %>');
   const listingTitle = "<%= listing.title %>";
 </script>
 
