@@ -91,7 +91,10 @@
       <div class="card col-12 col-md-5 ms-md-2 mb-3">
         <div class="card-body">
           <h5 class="card-title">@<%= review.author.username %></h5>
-          <p class="starability-result card-text" data-rating="<%= review.rating %>">Rated: <%= review.rating %> stars</p>
+          <p class="card-text">
+            <span class="rating-stars" style="--rating: <%= review.rating %>"></span>
+            &nbsp;Rated: <%= review.rating %> stars
+          </p>
           <p class="card-text"><%= review.comment %></p>
 
           <form class="d-inline" method="POST"

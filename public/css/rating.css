@@ -218,3 +218,38 @@
   .starability-slot > label:nth-of-type(2)::before { width: calc(var(--star-size) * 1); left: calc(-1 * var(--star-size) * 1); }
   .starability-slot > label:nth-of-type(1)::before { width: 0; left: 0; }
 }
+
+/* New visual-only star renderer for review list (scales cleanly) */
+.rating-stars {
+  --rating: 0;
+  font-size: calc(var(--star-size, 24px));
+  line-height: 1;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  color: #e0e0e0; /* empty star color */
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: 4px;
+}
+.rating-stars::before {
+  content: '★★★★★';
+  display: block;
+}
+.rating-stars::after {
+  content: '★★★★★';
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #ffc107; /* filled star color */
+  width: calc(var(--rating) * 20%);
+}
+
+/* Smaller stars on narrow viewports */
+@media (max-width: 768px) {
+  .rating-stars { font-size: calc(var(--star-size, 24px) - 6px); letter-spacing: 3px; }
+}
+@media (max-width: 480px) {
+  .rating-stars { font-size: calc(var(--star-size, 24px) - 10px); letter-spacing: 2px; }
+}
