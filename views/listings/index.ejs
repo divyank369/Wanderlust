@@ -93,6 +93,10 @@
       </div>
     </div>
   </div>
+  <% if (typeof q !== 'undefined' && q && q.trim().length > 0) { %>
+    <div class="mb-3"><strong>Search results for "<%= q %>"</strong></div>
+  <% } %>
+
   <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1 mt-3">
     <% for(let listing of allListings) { %>
       <a href="/listings/<%= listing.id %>" class="listing-link">

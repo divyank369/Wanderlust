@@ -20,8 +20,22 @@ async function getCoordinates(location) {
 
 // INDEX
 module.exports.index = async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs", { allListings });
+    const { q } = req.query;
+
+    // escape special regex chars to avoid ReDoS or unintended patterns
+    const escapeRegex = (text = "") => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    let allListings;
+    if (q && q.trim().length > 0) {
+        const safe = escapeRegex(q.trim());
+        const regex = new RegExp(safe, "i");
+        // search by title, location or country
+        allListings = await Listing.find({ $or: [{ title: regex }, { location: regex }, { country: regex }] });
+    } else {
+        allListings = await Listing.find({});
+    }
+
+    res.render("listings/index.ejs", { allListings, q });
 };
 
 
