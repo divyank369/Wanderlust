@@ -94,77 +94,49 @@
     </div>
   </div>
 
-  <!-- Mobile: show only first 4 filters, move rest into slide panel -->
-  <button id="filters-more-btn" class="btn btn-sm" style="display:none; margin-top: .5rem;">More</button>
+  <!-- Show only first 4 filters on small screens; `See all` expands inline and scrolls from right to left -->
+  <button id="filters-seeall-btn" class="btn btn-sm" style="display:none; margin-top:.5rem;">See all</button>
 
   <style>
-    /* Slide panel for extra filters on small screens */
-    .filters-panel-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.4);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity .25s ease;
-      z-index: 1050;
-    }
-    .filters-panel-backdrop.open { opacity: 1; visibility: visible; }
-    .filters-panel {
-      position: fixed; right: 0; top: 0; bottom: 0;
-      width: 80%; max-width: 320px; background: #fff;
-      box-shadow: -6px 0 18px rgba(0,0,0,0.12);
-      transform: translateX(100%); transition: transform .3s ease; z-index: 1060;
-      padding: 1rem; overflow-y: auto;
-    }
-    .filters-panel.open { transform: translateX(0); }
-    .filters-panel .close-panel { display:block; margin-left:auto; margin-bottom:.5rem; }
-    .filters-panel .filter { margin: .5rem 0; }
     @media (max-width: 576px) {
-      #filters { gap: .5rem; }
-      #filters-more-btn { display:inline-block; }
+      #filters { gap: .5rem; overflow-x: hidden; align-items: center; }
+      #filters .filter { flex: 0 0 auto; }
+      /* hide filters after the 4th by default on small screens */
+      #filters .filter:nth-child(n+5) { display: none; }
+      #filters.expanded { overflow-x: auto; scroll-behavior: smooth; }
+      /* when expanded, show all filters inline horizontally */
+      #filters.expanded .filter { display: inline-flex; }
+      #filters-seeall-btn { display: inline-block; }
     }
   </style>
 
-  <div id="filters-panel-backdrop" class="filters-panel-backdrop" aria-hidden="true"></div>
-  <aside id="filters-panel" class="filters-panel" aria-hidden="true" role="dialog" aria-label="More filters">
-    <button id="filters-close" class="btn btn-sm btn-light close-panel">Close</button>
-    <div id="filters-panel-content"></div>
-  </aside>
-
   <script>
     (function(){
-      const moreBtn = document.getElementById('filters-more-btn');
-      const filters = document.querySelectorAll('#filters .filter');
-      const panel = document.getElementById('filters-panel');
-      const panelContent = document.getElementById('filters-panel-content');
-      const backdrop = document.getElementById('filters-panel-backdrop');
-      const closeBtn = document.getElementById('filters-close');
+      const btn = document.getElementById('filters-seeall-btn');
+      const filters = document.getElementById('filters');
+      if(!btn || !filters) return;
 
-      function openPanel(){ panel.classList.add('open'); backdrop.classList.add('open'); panel.setAttribute('aria-hidden','false'); backdrop.setAttribute('aria-hidden','false'); }
-      function closePanel(){ panel.classList.remove('open'); backdrop.classList.remove('open'); panel.setAttribute('aria-hidden','true'); backdrop.setAttribute('aria-hidden','true'); }
-
-      function arrangeFilters(){
-        panelContent.innerHTML = '';
-        if(window.innerWidth <= 576){
-          moreBtn.style.display = 'inline-block';
-          filters.forEach((el, idx) => {
-            if(idx >= 4){
-              const clone = el.cloneNode(true);
-              panelContent.appendChild(clone);
-              el.style.display = 'none';
-            } else { el.style.display = ''; }
-          });
+      function toggleExpand(){
+        const expanded = filters.classList.toggle('expanded');
+        if(expanded){
+          btn.textContent = 'Close';
+          // scroll to the right end so content appears to come from the right
+          setTimeout(()=>{ filters.scrollLeft = filters.scrollWidth; }, 50);
         } else {
-          moreBtn.style.display = 'none';
-          filters.forEach(el => el.style.display = '');
+          btn.textContent = 'See all';
+          filters.scrollLeft = 0;
         }
       }
 
-      arrangeFilters();
-      window.addEventListener('resize', arrangeFilters);
-      moreBtn.addEventListener('click', function(e){ e.preventDefault(); openPanel(); });
-      closeBtn.addEventListener('click', function(e){ e.preventDefault(); closePanel(); });
-      backdrop.addEventListener('click', function(){ closePanel(); });
+      // attach only on small screens
+      function updateButtonVisibility(){
+        if(window.innerWidth <= 576){ btn.style.display = 'inline-block'; }
+        else { btn.style.display = 'none'; filters.classList.remove('expanded'); filters.scrollLeft = 0; btn.textContent = 'See all'; }
+      }
+
+      btn.addEventListener('click', function(e){ e.preventDefault(); toggleExpand(); });
+      window.addEventListener('resize', updateButtonVisibility);
+      updateButtonVisibility();
     })();
   </script>
 
