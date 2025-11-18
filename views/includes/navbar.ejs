@@ -17,10 +17,28 @@
     }
     .search-inp{
         border-radius: 20px;
-        width: 250px;
-        padding: 0.5rem 3rem 0.5rem 3rem;
+        width: 100%;
+        max-width: 250px;
+        padding: 0.5rem 1rem;
         background-color: #f8f9fa;
         font-size: 0.9rem;
+    }
+    @media (max-width: 576px) {
+        .search-inp{
+            max-width: 140px;
+            padding: 0.35rem 0.6rem;
+            font-size: 0.85rem;
+        }
+        .search-btn{
+            padding-left:0.6rem;
+            padding-right:0.6rem;
+            border-radius: 16px;
+        }
+        .navbar-nav .nav-link{
+            font-size: 0.95rem;
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
+        }
     }
 </style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">

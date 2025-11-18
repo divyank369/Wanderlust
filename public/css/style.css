@@ -15,7 +15,7 @@ body {
     flex: 1;
 }   
 .navbar {
-    height: 5rem;
+    min-height: 5rem;
     background-color: rgb(255, 255, 255);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     margin-bottom: 2rem;
@@ -24,6 +24,7 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    z-index: 1030;
 }
 
 .fa-compass {
@@ -180,5 +181,28 @@ body {
     /* prevent accidental horizontal scroll on very small devices */
     body {
       overflow-x: hidden;
+    }
+}
+
+/* Ensure the collapsed navbar pushes content and stacks nav links on small screens */
+@media (max-width: 768px) {
+    .navbar {
+        align-items: flex-start;
+        padding-bottom: 0.25rem;
+    }
+    .navbar .navbar-collapse {
+        width: 100%;
+        background: #fff;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+    .navbar .navbar-collapse .navbar-nav {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .navbar .navbar-collapse .navbar-nav .nav-link {
+        padding: 0.5rem 0.75rem;
+        width: 100%;
     }
 }
