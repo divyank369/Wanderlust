@@ -55,6 +55,8 @@
     display: inline-flex !important;
   }
 
+  .filter[aria-current="true"] { outline: 2px solid #007AFF; border-radius: .5rem; padding: 2px; }
+
   .filters-bar.opening { animation: slideIn 200ms ease-out; }
   @keyframes slideIn {
     from { transform: translateX(-10px); opacity: 0; }
@@ -83,16 +85,16 @@
 </div>
 <div id="filters" class="filters-bar">
 
-  <div class="filter"><i class="fa-solid fa-fire"></i><p>Trending</p></div>
-  <div class="filter"><i class="fa-solid fa-bed"></i><p>Rooms</p></div>
-  <div class="filter"><i class="fa-solid fa-location-dot"></i><p>Nearby</p></div>
-  <div class="filter"><i class="fa-solid fa-mountain-city"></i><p>Iconic Cities</p></div>
-  <div class="filter"><i class="fa-solid fa-mountain-sun"></i><p>Mountains</p></div>
-  <div class="filter"><i class="fa-solid fa-person-swimming"></i><p>Amazing Pools</p></div>
-  <div class="filter"><i class="fa-solid fa-place-of-worship"></i><p>Castles</p></div>
-  <div class="filter"><i class="fa-solid fa-campground"></i><p>Camping</p></div>
-  <div class="filter"><i class="fa-solid fa-cow"></i><p>Farms</p></div>
-  <div class="filter"><i class="fa-solid fa-snowflake"></i><p>Arctic</p></div>
+  <div class="filter" data-filter="Trending" <%= (typeof filter !== 'undefined' && filter==='Trending') ? 'aria-current="true"' : '' %> ><i class="fa-solid fa-fire"></i><p>Trending</p></div>
+  <div class="filter" data-filter="Rooms"><i class="fa-solid fa-bed"></i><p>Rooms</p></div>
+  <div class="filter" data-filter="Nearby"><i class="fa-solid fa-location-dot"></i><p>Nearby</p></div>
+  <div class="filter" data-filter="Iconic Cities" <%= (typeof filter !== 'undefined' && filter==='Iconic Cities') ? 'aria-current="true"' : '' %> ><i class="fa-solid fa-mountain-city"></i><p>Iconic Cities</p></div>
+  <div class="filter" data-filter="Mountains" <%= (typeof filter !== 'undefined' && filter==='Mountains') ? 'aria-current="true"' : '' %> ><i class="fa-solid fa-mountain-sun"></i><p>Mountains</p></div>
+  <div class="filter" data-filter="Amazing Pools" <%= (typeof filter !== 'undefined' && filter==='Amazing Pools') ? 'aria-current="true"' : '' %> ><i class="fa-solid fa-person-swimming"></i><p>Amazing Pools</p></div>
+  <div class="filter" data-filter="Castles" <%= (typeof filter !== 'undefined' && filter==='Castles') ? 'aria-current="true"' : '' %> ><i class="fa-solid fa-place-of-worship"></i><p>Castles</p></div>
+  <div class="filter" data-filter="Camping" <%= (typeof filter !== 'undefined' && filter==='Camping') ? 'aria-current="true"' : '' %> ><i class="fa-solid fa-campground"></i><p>Camping</p></div>
+  <div class="filter" data-filter="Farms" <%= (typeof filter !== 'undefined' && filter==='Farms') ? 'aria-current="true"' : '' %> ><i class="fa-solid fa-cow"></i><p>Farms</p></div>
+  <div class="filter" data-filter="Arctic" <%= (typeof filter !== 'undefined' && filter==='Arctic') ? 'aria-current="true"' : '' %> ><i class="fa-solid fa-snowflake"></i><p>Arctic</p></div>
 
   <div class="tax-toggle" style="margin-left:auto;">
     <div class="form-check-reverse form-switch">
@@ -141,6 +143,18 @@
 
     window.addEventListener('resize', updateVisibility);
     updateVisibility();
+      // wire filter clicks to update query param and reload
+      const filterEls = document.querySelectorAll('#filters .filter');
+      filterEls.forEach(el => {
+        el.addEventListener('click', () => {
+          const f = el.getAttribute('data-filter');
+          const params = new URLSearchParams(window.location.search);
+          if (f) params.set('filter', f);
+          else params.delete('filter');
+          // preserve search query `q` if present
+          window.location = window.location.pathname + '?' + params.toString();
+        });
+      });
   })();
 </script>
 

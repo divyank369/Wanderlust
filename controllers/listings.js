@@ -20,22 +20,57 @@ async function getCoordinates(location) {
 
 // INDEX
 module.exports.index = async (req, res) => {
-    const { q } = req.query;
+    const { q, filter } = req.query;
 
     // escape special regex chars to avoid ReDoS or unintended patterns
     const escapeRegex = (text = "") => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
     let allListings;
-    if (q && q.trim().length > 0) {
-        const safe = escapeRegex(q.trim());
-        const regex = new RegExp(safe, "i");
-        // search by title, location or country
-        allListings = await Listing.find({ $or: [{ title: regex }, { location: regex }, { country: regex }] });
+
+    // If a filter is present, try to interpret it
+    if (filter && filter.trim().length > 0) {
+        const f = filter.trim();
+        // map UI filter names to category values in the model
+        const categoryMap = {
+            'Iconic Cities': 'Cities',
+            'Mountains': 'Mountains',
+            'Amazing Pools': 'Amazing Pools',
+            'Castles': 'Castles',
+            'Camping': 'Camping',
+            'Farms': 'Farms',
+            'Arctic': 'Arctic'
+        };
+
+        if (f === 'Trending') {
+            // Return listings sorted by average rating (descending). Use aggregation to compute avg rating.
+            allListings = await Listing.aggregate([
+                { $lookup: { from: 'reviews', localField: 'reviews', foreignField: '_id', as: 'reviews_docs' } },
+                { $addFields: { avgRating: { $avg: '$reviews_docs.rating' } } },
+                { $sort: { avgRating: -1 } }
+            ]);
+            // aggregate returns plain objects; optionally populate owner if needed. Keep as-is.
+        } else if (categoryMap[f]) {
+            allListings = await Listing.find({ categories: categoryMap[f] });
+        } else if (q && q.trim().length > 0) {
+            const safe = escapeRegex(q.trim());
+            const regex = new RegExp(safe, "i");
+            allListings = await Listing.find({ $or: [{ title: regex }, { location: regex }, { country: regex }] });
+        } else {
+            // unknown filter - fallback to all
+            allListings = await Listing.find({});
+        }
     } else {
-        allListings = await Listing.find({});
+        if (q && q.trim().length > 0) {
+            const safe = escapeRegex(q.trim());
+            const regex = new RegExp(safe, "i");
+            // search by title, location or country
+            allListings = await Listing.find({ $or: [{ title: regex }, { location: regex }, { country: regex }] });
+        } else {
+            allListings = await Listing.find({});
+        }
     }
 
-    res.render("listings/index.ejs", { allListings, q });
+    res.render("listings/index.ejs", { allListings, q, filter });
 };
 
 
