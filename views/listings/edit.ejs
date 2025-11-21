@@ -47,6 +47,23 @@
             <div class="invalid-feedback"> Please enter a location</div>
         </div>
 
+        <div class="mb-3">
+          <label for="category" class="form-label">Category</label>
+          <select id="category" name="listing[categories][]" class="form-select" required>
+            <option value="" disabled <%= !(listing.categories && listing.categories.length) ? 'selected' : '' %>>Select category</option>
+            <option value="Mountains" <%= listing.categories && listing.categories[0] === 'Mountains' ? 'selected' : '' %>>Mountains</option>
+            <option value="Beaches" <%= listing.categories && listing.categories[0] === 'Beaches' ? 'selected' : '' %>>Beaches</option>
+            <option value="Cities" <%= listing.categories && listing.categories[0] === 'Cities' ? 'selected' : '' %>>Cities</option>
+            <option value="Countryside" <%= listing.categories && listing.categories[0] === 'Countryside' ? 'selected' : '' %>>Countryside</option>
+            <option value="Amazing Pools" <%= listing.categories && listing.categories[0] === 'Amazing Pools' ? 'selected' : '' %>>Amazing Pools</option>
+            <option value="Castles" <%= listing.categories && listing.categories[0] === 'Castles' ? 'selected' : '' %>>Castles</option>
+            <option value="Camping" <%= listing.categories && listing.categories[0] === 'Camping' ? 'selected' : '' %>>Camping</option>
+            <option value="Farms" <%= listing.categories && listing.categories[0] === 'Farms' ? 'selected' : '' %>>Farms</option>
+            <option value="Arctic" <%= listing.categories && listing.categories[0] === 'Arctic' ? 'selected' : '' %>>Arctic</option>
+          </select>
+          <div class="invalid-feedback"> Please select a category</div>
+        </div>
+
         <button class="btn btn-dark edit-btn mt-3 mb-4">Edit</button>
       </form>
     </div>

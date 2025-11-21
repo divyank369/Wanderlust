@@ -96,6 +96,22 @@ body {
     color: inherit !important;
 }
 
+/* Category tag shown on listing cards */
+.category-tag{
+    display: inline-block;
+    background: rgba(254,66,77,0.08);
+    color: #fe424d;
+    border-radius: 999px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    cursor: pointer;
+}
+.category-tag:hover{
+    background: rgba(254,66,77,0.12);
+}
+
 
 /* Card-Effect */
 .card-img-overlay {

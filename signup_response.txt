@@ -1,0 +1,32 @@
+HTTP/1.1 302 Found
+X-Powered-By: Express
+Location: /listings
+Vary: Accept
+Content-Type: text/plain; charset=utf-8
+Content-Length: 31
+Set-Cookie: connect.sid=s%3AR9gHEnjpXs9DkoGC9boa-QmmqkZwgjTs.rS1KUA1ShNjvwcbwfdjioKWvRjBLIznr5Is7TaeMDxw; Path=/; Expires=Fri, 28 Nov 2025 07:48:58 GMT; HttpOnly
+Date: Fri, 21 Nov 2025 07:48:58 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+HTTP/1.1 302 Found
+X-Powered-By: Express
+Location: /listings/new
+Vary: Accept
+Content-Type: text/plain; charset=utf-8
+Content-Length: 35
+Set-Cookie: connect.sid=s%3AR9gHEnjpXs9DkoGC9boa-QmmqkZwgjTs.rS1KUA1ShNjvwcbwfdjioKWvRjBLIznr5Is7TaeMDxw; Path=/; Expires=Fri, 28 Nov 2025 07:48:58 GMT; HttpOnly
+Date: Fri, 21 Nov 2025 07:48:58 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+HTTP/1.1 404 Not Found
+X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 5131
+ETag: W/"140b-4MBpsDsGC2MlaksYfe/vWlJbb8k"
+Set-Cookie: connect.sid=s%3AR9gHEnjpXs9DkoGC9boa-QmmqkZwgjTs.rS1KUA1ShNjvwcbwfdjioKWvRjBLIznr5Is7TaeMDxw; Path=/; Expires=Fri, 28 Nov 2025 07:48:59 GMT; HttpOnly
+Date: Fri, 21 Nov 2025 07:48:59 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+

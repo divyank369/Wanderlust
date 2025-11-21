@@ -28,12 +28,23 @@ const userRouter = require("./routes/user.js");
 
 const dbUrl = process.env.ATLAS_DB_URL || "mongodb://127.0.0.1:27017/wanderlust";
 
-main()
-  .then(() => console.log("connected to DB"))
-  .catch((err) => console.log(err));
+// Try connecting with exponential backoff to tolerate transient DNS/network issues
+connectWithRetry(5).then(() => console.log('connected to DB')).catch((err) => {
+  console.error('Failed to establish DB connection after retries:', err);
+  process.exit(1);
+});
 
-async function main() {
-  await mongoose.connect(dbUrl);
+async function connectWithRetry(attemptsLeft, delayMs = 1000) {
+  try {
+    await mongoose.connect(dbUrl);
+    return;
+  } catch (err) {
+    console.warn(`DB connection failed. Attempts left: ${attemptsLeft - 1}. Error: ${err.code || err.message}`);
+    if (attemptsLeft <= 1) throw err;
+    // wait and retry with exponential backoff
+    await new Promise((res) => setTimeout(res, delayMs));
+    return connectWithRetry(attemptsLeft - 1, Math.min(delayMs * 2, 30000));
+  }
 }
 
 //--------------------------------------

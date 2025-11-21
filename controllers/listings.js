@@ -1,5 +1,6 @@
 const Listing = require("../models/listing");
 const cloudinary = require("../cloudConfig");
+const fs = require('fs').promises;
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const mapToken = process.env.MAP_TOKEN;
@@ -107,12 +108,36 @@ module.exports.createListing = async (req, res) => {
 
         // CLOUDINARY UPLOAD
         if (req.file) {
-            const uploadResponse = await cloudinary.uploader.upload(req.file.path, {
-                folder: "wanderlust_DEV"
-            });
+            // helper to upload with one retry on timeout
+            const uploadWithRetry = async (path, retries = 1) => {
+                try {
+                    const resp = await cloudinary.uploader.upload(path, { folder: 'wanderlust_DEV' });
+                    return resp;
+                } catch (err) {
+                    // Cloudinary uses 499 for client timeout; also check name
+                    const isTimeout = (err && (err.http_code === 499 || err.name === 'TimeoutError'));
+                    if (isTimeout && retries > 0) {
+                        console.warn('Cloudinary upload timed out, retrying once...');
+                        return uploadWithRetry(path, retries - 1);
+                    }
+                    throw err;
+                }
+            };
 
-            imageURL = uploadResponse.secure_url;
-            publicID = uploadResponse.public_id;
+            try {
+                const uploadResponse = await uploadWithRetry(req.file.path, 1);
+                imageURL = uploadResponse.secure_url;
+                publicID = uploadResponse.public_id;
+            } catch (uploadErr) {
+                // ensure temp file is removed, then fail with user-friendly message
+                try { await fs.unlink(req.file.path); } catch (e) { /* ignore */ }
+                console.error('❌ Cloudinary upload failed:', uploadErr);
+                req.flash('error', 'Image upload failed (timeout or network error). Try again with a smaller image or later.');
+                return res.redirect('/listings/new');
+            }
+
+            // cleanup temp file after success
+            try { await fs.unlink(req.file.path); } catch (e) { /* ignore */ }
         }
 
         const newListing = new Listing(req.body.listing);

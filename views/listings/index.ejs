@@ -38,6 +38,9 @@
         <img src="<%= listing.image.url %>" class="card-img-top" alt="listing image" style="height:20rem">
         <div class="card-img-overlay"></div>
         <div class="card-body">
+          <% if (listing.categories && listing.categories[0]) { %>
+            <span class="category-tag" onclick="event.preventDefault(); window.location='/listings?filter=<%= encodeURIComponent(listing.categories[0]) %>';"><%= listing.categories[0] %></span>
+          <% } %>
           <p class="card-text">
             <b><%= listing.title %></b><br>
             <%= listing.description %> <br>
