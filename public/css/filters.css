@@ -1,0 +1,61 @@
+/* Filters and mobile header styles (extracted from views/listings/index.ejs) */
+.filters-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  margin-bottom: 0.5rem;
+}
+.filters-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+.filters-seeall {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #007AFF;
+}
+
+.filters-bar {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+  align-items: center;
+  padding: 6px 12px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.filters-bar::-webkit-scrollbar { display: none; }
+
+.filter {
+  flex: 0 0 auto;
+  min-width: 64px;
+  text-align: center;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  scroll-snap-align: start;
+}
+.filter p { font-size: 0.8rem; margin-top: 3px; }
+
+.filters-bar:not(.expanded) .filter:nth-child(n+6) { display: none; }
+.filters-bar.expanded .filter { display: inline-flex !important; }
+.filters-bar.opening { animation: slideIn 200ms ease-out; }
+@keyframes slideIn { from { transform: translateX(-10px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+.filter[aria-current="true"] { outline: 2px solid #007AFF; border-radius: .5rem; padding: 2px; }
+
+@media (min-width: 577px) {
+  .filters-header { display: none; }
+  .filters-bar { overflow: visible; flex-wrap: wrap; }
+  .filters-bar .filter { min-width: auto !important; display: flex !important; }
+}
+
+@media (max-width: 480px) {
+  .tax-toggle .form-check-label { display: none; }
+}

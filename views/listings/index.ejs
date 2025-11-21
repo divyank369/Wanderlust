@@ -1,84 +1,5 @@
 <% layout('/layouts/boilerplate') %>
-<style>
-  .filters-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 12px;
-    margin-bottom: 0.5rem;
-  }
-  .filters-title {
-    font-weight: 600;
-    font-size: 1.05rem;
-  }
-  .filters-seeall {
-    background: none;
-    border: none;
-    padding: 4px 6px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #007AFF;
-  }
-
-  .filters-bar {
-    display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    white-space: nowrap;
-    flex-wrap: nowrap;
-    align-items: center;
-    padding: 6px 12px;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-  }
-  .filters-bar::-webkit-scrollbar { display: none; }
-
-  .filter {
-    flex: 0 0 auto;
-    min-width: 64px;
-    text-align: center;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    scroll-snap-align: start;
-  }
-  .filter p {
-    font-size: 0.8rem;
-    margin-top: 3px;
-  }
-
-  .filters-bar:not(.expanded) .filter:nth-child(n+6) {
-    display: none;
-  }
-
-  .filters-bar.expanded .filter {
-    display: inline-flex !important;
-  }
-
-  .filter[aria-current="true"] { outline: 2px solid #007AFF; border-radius: .5rem; padding: 2px; }
-
-  .filters-bar.opening { animation: slideIn 200ms ease-out; }
-  @keyframes slideIn {
-    from { transform: translateX(-10px); opacity: 0; }
-    to   { transform: translateX(0); opacity: 1; }
-  }
-
-  @media (min-width: 577px) {
-    .filters-header { display: none; }
-    .filters-bar {
-      overflow: visible;
-      flex-wrap: wrap;
-    }
-    .filters-bar .filter {
-      min-width: auto !important;
-      display: flex !important;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .tax-toggle .form-check-label { display: none; }
-  }
-</style>
+<link rel="stylesheet" href="/css/filters.css">
 <div class="filters-header">
   <div class="filters-title">Filters</div>
   <button id="filters-seeall-btn" class="filters-seeall">See all</button>
@@ -103,60 +24,8 @@
     </div>
   </div>
 
-</div>
-<script>
-  (function () {
-    const btn = document.getElementById('filters-seeall-btn');
-    const filters = document.getElementById('filters');
-
-    if (!btn || !filters) return;
-
-    function toggleExpand() {
-      const expanded = filters.classList.toggle('expanded');
-
-      if (expanded) {
-        btn.textContent = 'Close';
-        filters.classList.add('opening');
-        setTimeout(() => filters.classList.remove('opening'), 220);
-        setTimeout(() => { filters.scrollLeft = 0; }, 60);
-      } else {
-        btn.textContent = 'See all';
-        filters.scrollLeft = 0;
-      }
-    }
-
-    function updateVisibility() {
-      if (window.innerWidth <= 576) {
-        btn.style.display = 'inline-block';
-      } else {
-        btn.style.display = 'none';
-        filters.classList.remove('expanded');
-        filters.scrollLeft = 0;
-        btn.textContent = 'See all';
-      }
-    }
-
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      toggleExpand();
-    });
-
-    window.addEventListener('resize', updateVisibility);
-    updateVisibility();
-      // wire filter clicks to update query param and reload
-      const filterEls = document.querySelectorAll('#filters .filter');
-      filterEls.forEach(el => {
-        el.addEventListener('click', () => {
-          const f = el.getAttribute('data-filter');
-          const params = new URLSearchParams(window.location.search);
-          if (f) params.set('filter', f);
-          else params.delete('filter');
-          // preserve search query `q` if present
-          window.location = window.location.pathname + '?' + params.toString();
-        });
-      });
-  })();
-</script>
+ </div>
+ <script src="/js/filters.js" defer></script>
 
 <% if (typeof q !== 'undefined' && q && q.trim().length > 0) { %>
   <div class="mb-3"><strong>Search results for "<%= q %>"</strong></div>
@@ -181,12 +50,4 @@
     </a>
   <% } %>
 </div>
-<script>
-  let taxSwitch = document.getElementById('switchCheckDefault');
-  taxSwitch.addEventListener('click', function () {
-    let taxInfo = document.getElementsByClassName('tax-info');
-    for (info of taxInfo) {
-      info.style.display = taxSwitch.checked ? 'inline' : 'none';
-    }
-  });
-</script>
+<!-- tax switch handled in /js/filters.js -->
