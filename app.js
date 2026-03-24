@@ -29,23 +29,37 @@ const userRouter = require("./routes/user.js");
 const dbUrl = process.env.ATLAS_DB_URL || "mongodb://127.0.0.1:27017/wanderlust";
 
 // Try connecting with exponential backoff to tolerate transient DNS/network issues
-connectWithRetry(5).then(() => console.log('connected to DB')).catch((err) => {
-  console.error('Failed to establish DB connection after retries:', err);
-  process.exit(1);
-});
+async function startServer() {
+  try {
+    await connectWithRetry(5);
+    console.log('✅ Connected to DB');
+    
+    // Only start server AFTER database is ready
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is listening on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('❌ Failed to establish DB connection after retries:', err);
+    process.exit(1);
+  }
+}
 
 async function connectWithRetry(attemptsLeft, delayMs = 1000) {
   try {
     await mongoose.connect(dbUrl);
     return;
   } catch (err) {
-    console.warn(`DB connection failed. Attempts left: ${attemptsLeft - 1}. Error: ${err.code || err.message}`);
+    console.warn(`⚠️ DB connection failed. Attempts left: ${attemptsLeft - 1}. Error: ${err.code || err.message}`);
     if (attemptsLeft <= 1) throw err;
     // wait and retry with exponential backoff
     await new Promise((res) => setTimeout(res, delayMs));
     return connectWithRetry(attemptsLeft - 1, Math.min(delayMs * 2, 30000));
   }
 }
+
+// Start the server
+startServer();
 
 //--------------------------------------
 // MIDDLEWARE & CONFIGURATION
@@ -144,13 +158,8 @@ app.use((req, res, next) => {
 //--------------------------------------
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "Something went wrong!" } = err;
+  console.error('❌ Error:', err);
   res.status(statusCode).render("error.ejs", { message });
 });
 
-//--------------------------------------
-// SERVER
-//--------------------------------------
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
+
