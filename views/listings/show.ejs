@@ -1,11 +1,6 @@
 <% layout('/layouts/boilerplate') %>
 
-<!-- Pass variables required by map.js -->
-<script>
-  const mapToken = "<%= process.env.MAP_TOKEN %>";
-  const coordinates = JSON.parse('<%- JSON.stringify((listing.geometry && listing.geometry.coordinates) ? listing.geometry.coordinates : [0, 0]) %>');
-  const listingTitle = "<%= listing.title %>";
-</script>
+<!-- Variables for map (will be used after #map element is rendered) -->
 
 <div class="row">
   <div class="col-12 col-md-8 offset-md-3 mt-3">
@@ -117,5 +112,27 @@
 
 </div>
 
-<!-- Load map.js AFTER variables are defined -->
+<!-- Pass variables required by map.js -->
+<script>
+  const mapToken = "<%= mapToken %>";
+  const coordinates = JSON.parse('<%- JSON.stringify((listing.geometry && listing.geometry.coordinates) ? listing.geometry.coordinates : null) %>');
+  const listingTitle = "<%= listing.title %>";
+  console.log("Map Token:", mapToken);
+  console.log("Coordinates:", coordinates);
+
+  // Validate before map initialization
+  if (!mapToken) {
+    console.error('❌ MAP_TOKEN not set in environment');
+    const mapEl = document.getElementById('map');
+    if (mapEl) mapEl.innerHTML = '<p style="color: red; text-align: center; padding: 20px;">⚠️ Map token not configured.</p>';
+  }
+  if (!coordinates || !Array.isArray(coordinates) || coordinates.length !== 2) {
+    console.error('❌ No valid coordinates found. Listing needs geometry data.');
+    console.error('  Current coordinates:', coordinates);
+    const mapEl = document.getElementById('map');
+    if (mapEl) mapEl.innerHTML = '<p style="color: red; text-align: center; padding: 20px;">⚠️ Location data not available for this listing.</p>';
+  }
+</script>
+
+<!-- Load map.js AFTER variables and #map element are defined -->
 <script src="/js/map.js"></script>
