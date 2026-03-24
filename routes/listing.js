@@ -11,9 +11,6 @@ const upload = multer({ dest: "uploads/", limits: { fileSize: 6 * 1024 * 1024 } 
 const cloudinary = require("../cloudConfig");
 
  // Configure multer to use Cloudinary storage
- router.get("/", (req, res) => {
-  res.redirect("/listings");
-});
 
 // Index + Create Route (same path "/")
 router.route("/")
