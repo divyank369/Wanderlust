@@ -124,13 +124,9 @@ app.use((req, res, next) => {
 //--------------------------------------
 // ROUTES
 //--------------------------------------
-app.get("/", (req, res) => {
-  res.send("/listings");
-});
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
-
 
 //--------------------------------------
 // 404 HANDLER
@@ -150,8 +146,6 @@ app.use((err, req, res, next) => {
 //--------------------------------------
 // SERVER
 //--------------------------------------
-const port = process.env.PORT || 8080;
-
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
+app.listen(8080, () => {
+  console.log("Server is listening to port 8080");
 });
