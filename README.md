@@ -1,163 +1,80 @@
-🌍 Wanderlust – Full-Stack Travel Listing Platform
+# Wanderlust
 
-A full-stack production-grade travel listing platform inspired by Airbnb.
-Built with Node.js, Express, MongoDB Atlas, Cloudinary, MapTiler Maps, Passport Authentication, and EJS.
+Wanderlust is a full-stack travel listing application built with Node.js, Express, MongoDB, and EJS. Users can explore listings, create and manage their own listings, and share reviews.
 
-Live Demo: (https://wanderlust-a28k.onrender.com/)
+**Live demo:** [wanderlust-a28k.onrender.com](https://wanderlust-a28k.onrender.com/)
 
-🔥 Features
-🔑 Authentication & Authorization
+## Features
 
-Fully secure user signup/login
+- Account registration and sign-in using Passport local authentication
+- Session-backed user state and flash messages
+- Create, edit, view, and delete travel listings
+- Listing reviews with author-based controls
+- Cloudinary image uploads
+- GeoJSON coordinates and MapTiler map display
+- Server-rendered EJS views with responsive Bootstrap styling
 
-Password hashing (Passport.js + LocalStrategy)
+## Technology Stack
 
-Role-based listing edit/delete permissions
+| Area | Tools |
+| --- | --- |
+| Server | Node.js, Express |
+| Data | MongoDB, Mongoose |
+| Views | EJS, EJS Mate, Bootstrap, vanilla JavaScript |
+| Authentication | Passport, Passport Local, Passport Local Mongoose |
+| Images | Cloudinary and Multer |
+| Maps | MapTiler |
 
-Flash messages & session management
+## Local Setup
 
-🏡 Listing Management (CRUD)
+### Requirements
 
-Create, view, update, delete listings
+- Node.js 18.x
+- MongoDB, local or hosted
+- Cloudinary account for listing images
+- MapTiler token for map features
 
-Title, description, price, category, owner info
+### Install and configure
 
-Cloudinary-based secure image upload
+```bash
+git clone https://github.com/divyank369/Wanderlust.git
+cd Wanderlust
+npm install
+```
 
-Auto image replacement when editing
+Create a `.env` file in the project root:
 
-📍 Smart Geolocation
+```dotenv
+ATLAS_DB_URL=mongodb://127.0.0.1:27017/wanderlust
+SECRET=replace-with-a-long-random-secret
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_KEY=your-cloudinary-key
+CLOUDINARY_SECRET=your-cloudinary-secret
+MAP_TOKEN=your-maptiler-token
+```
 
-Forward geocoding via MapTiler API
+Start the development server:
 
-Store coordinates in MongoDB (GeoJSON)
+```bash
+npm start
+```
 
-Display map on listing pages
+Open [http://localhost:8080](http://localhost:8080). Keep secrets in your local environment file and out of Git.
 
-⭐ Reviews System
+## Project Structure
 
-Add/delete reviews
+```text
+.
+├── controllers/       # Listing, review, and user request handlers
+├── models/            # Mongoose schemas
+├── routes/            # Express route modules
+├── views/             # EJS pages, layouts, and shared includes
+├── public/            # CSS, browser JavaScript, and assets
+├── app.js             # Express app and server startup
+├── cloudConfig.js     # Cloudinary upload configuration
+└── package.json
+```
 
-Review author control
+## Notes
 
-Flash notifications
-
-🎨 UI/UX (EJS)
-
-Clean pages
-
-Responsive layout
-
-Custom CSS + Bootstrap
-
-Flash alerts
-
-☁ Deployment Ready
-
-Render auto-deploy enabled
-
-Connected GitHub CI/CD
-
-Environment variables for secure keys
-
-🛠 Tech Stack
-
-Frontend:
-
-EJS Templates
-
-Bootstrap
-
-Vanilla JavaScript
-
-Backend:
-
-Node.js
-
-Express.js
-
-Mongoose ORM
-
-Passport.js (Local Strategy)
-
-Database:
-
-MongoDB Atlas
-
-File Storage:
-
-Cloudinary v2 (manual uploader)
-
-Maps & Geocoding:
-
-MapTiler API
-
-Dev Tools:
-
-Nodemon
-
-GitHub
-
-
-📁 Project Structure
-Wanderlust/
-│── controllers/
-│   └── listings.js
-│── models/
-│   └── listing.js
-│── public/
-│── routes/
-│   ├── listing.js
-│   ├── review.js
-│   └── user.js
-│── utils/
-│── views/
-│   ├── listings/
-│   ├── users/
-│   ├── includes/
-│   └── layouts/
-│── cloudConfig.js
-│── app.js
-│── package.json
-│── README.md
-
-
-🚀 Deployment (Render)
-
-Push project to GitHub
-
-On Render → “New Web Service”
-
-Connect repo
-
-Set:
-
-Build: npm install
-Start: node app.js
-
-
-Add environment variables
-
-Auto-deploy → ON
-
-🧪 Future Enhancements
-
-Image delete from Cloudinary
-
-Pagination
-
-Price-based filtering
-
-Booking engine
-
-Admin dashboard
-
-Email verification
-
-User profile page
-
-👤 Author
-
-Your Name (Divyank Singh)
-
-GitHub: https://github.com/divyank369
+MongoDB, Cloudinary, and MapTiler are external services. The application needs valid credentials and network access for those integrations. This project is intended as a portfolio and learning application.
