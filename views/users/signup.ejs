@@ -1,24 +1,36 @@
 <% layout('/layouts/boilerplate') %>
-    <div class="row mt-3">
-        <h1 class="col-6 offset-3 mb-3">SignUp on WanderLust</h1>
-        <div class="col-8 offset-3 ">
-            <form action="/signup" method="POST" novalidate class="needs-validation">
-                <div class="mb-3 mt-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input id="username" name="username" type="text" class="form-control" required />
-                    <div class="valid-feedback">Looks Good</div>
-                </div>
 
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input id="email" name="email" type="email" class="form-control" required />
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input id="password" name="password" type="password" class="form-control" required />
-                </div>
-                
-                <button class="btn btn-success"> SignUp</button>
-            </form>
+<main class="auth-page">
+    <section class="auth-panel" aria-labelledby="auth-title">
+        <div class="auth-brand-mark" aria-hidden="true"><i class="fa-regular fa-compass"></i></div>
+        <p class="auth-eyebrow">YOUR NEXT CHAPTER STARTS HERE</p>
+        <h1 id="auth-title">Find your place in the world.</h1>
+        <p class="auth-intro">Create an account to save the stays you love and discover somewhere new.</p>
+
+        <form action="/signup" method="POST" novalidate class="needs-validation auth-form">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input id="username" name="username" type="text" class="form-control" autocomplete="username" placeholder="How should we call you?" required />
+                <div class="invalid-feedback">Please choose a username.</div>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input id="email" name="email" type="email" class="form-control" autocomplete="email" placeholder="you@example.com" required />
+                <div class="invalid-feedback">Enter a valid email address.</div>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <input id="password" name="password" type="password" class="form-control" autocomplete="new-password" placeholder="Create a password" required />
+                <div class="invalid-feedback">Please enter a password.</div>
+            </div>
+            <button class="btn auth-submit" type="submit">Create account <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="/login">Log in</a></p>
+    </section>
+    <aside class="auth-visual auth-visual-signup" aria-label="A peaceful mountain destination">
+        <div class="auth-visual-copy">
+            <span class="auth-visual-kicker">GO A LITTLE FURTHER</span>
+            <p>There’s a place<br>with your name on it.</p>
         </div>
-    </div>
+    </aside>
+</main>

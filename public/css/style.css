@@ -1,5 +1,5 @@
 body {
-  font-family: "Plus Jakarta Sans",sans-serif !important;
+  font-family: "Segoe UI", Arial, sans-serif !important;
                 display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -14,6 +14,108 @@ body {
 .container {
     flex: 1;
 }   
+
+/* Auth pages */
+.auth-page {
+    width: min(100%, 1100px);
+    min-height: 620px;
+    margin: 2rem auto 4rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.82fr);
+    overflow: hidden;
+    border: 1px solid #ece9e6;
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(35, 35, 35, 0.09);
+}
+.auth-panel {
+    padding: clamp(2rem, 5vw, 4.5rem);
+    align-self: center;
+}
+.auth-brand-mark {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 2.25rem;
+    border-radius: 15px;
+    background: #fff0ef;
+    color: #fe424d;
+    font-size: 1.5rem;
+}
+.auth-eyebrow, .auth-visual-kicker {
+    color: #e14c53;
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.16em;
+}
+.auth-panel h1 {
+    max-width: 440px;
+    margin: 0.5rem 0 0.75rem;
+    color: #252629;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 1.08;
+}
+.auth-intro {
+    max-width: 390px;
+    margin-bottom: 2rem;
+    color: #77777b;
+    line-height: 1.65;
+}
+.auth-form .form-label { color: #343539; font-size: 0.9rem; font-weight: 650; }
+.auth-form .form-control {
+    min-height: 52px;
+    padding: 0.8rem 1rem;
+    border: 1px solid #e3e3e5;
+    border-radius: 12px;
+    background: #fcfcfc;
+    font-size: 0.95rem;
+}
+.auth-form .form-control:focus {
+    border-color: #fe777e;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(254, 66, 77, 0.12);
+}
+.auth-submit {
+    width: 100%;
+    min-height: 52px;
+    border: 0;
+    border-radius: 12px;
+    background: #fe424d;
+    color: #fff;
+    font-weight: 700;
+    transition: background 160ms ease, transform 160ms ease;
+}
+.auth-submit:hover { transform: translateY(-1px); background: #e63843; color: #fff; }
+.auth-submit span { margin-left: 0.5rem; font-size: 1.15rem; }
+.auth-switch { margin: 1.5rem 0 0; color: #77777b; text-align: center; font-size: 0.9rem; }
+.auth-switch a { color: #d83f49; font-weight: 700; text-decoration: none; }
+.auth-switch a:hover { text-decoration: underline; }
+.auth-visual {
+    min-height: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding: 2.5rem;
+    background-color: #537c82;
+    background-position: center;
+    background-size: cover;
+    isolation: isolate;
+    position: relative;
+}
+.auth-visual::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(15, 30, 35, 0.04) 20%, rgba(15, 30, 35, 0.72) 100%);
+}
+.auth-visual-signup { background-image: url("https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1100&q=80"); }
+.auth-visual-login { background-image: url("https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=1100&q=80"); }
+.auth-visual-copy { color: #fff; }
+.auth-visual-copy .auth-visual-kicker { color: rgba(255,255,255,0.8); }
+.auth-visual-copy p { margin: 0.7rem 0 0; font-size: clamp(2rem, 4vw, 3.1rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1.05; }
 .navbar {
     min-height: 5rem;
     background-color: rgb(255, 255, 255);
@@ -177,7 +279,17 @@ body {
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 767px) {
+    .auth-page {
+        min-height: 0;
+        margin: 0.75rem auto 2rem;
+        grid-template-columns: 1fr;
+        border-radius: 18px;
+    }
+    .auth-panel { padding: 1.75rem 1.35rem 2rem; }
+    .auth-brand-mark { margin-bottom: 1.5rem; }
+    .auth-visual { min-height: 210px; padding: 1.5rem; }
+    .auth-visual-copy p { font-size: 2rem; }
     .nav-link {
         font-size: 0.95rem;
         margin-right: 0.5rem;
